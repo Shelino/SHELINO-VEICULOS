@@ -33,7 +33,6 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;min-
 .btn-outline-red{background:transparent;color:var(--red2);border-color:#4a0e0e}
 .btn-outline-red:hover{background:var(--red-dim)}
 .btn-sm{padding:6px 12px;font-size:12px}
-.btn-xs{padding:4px 9px;font-size:11px}
 .view{display:none}.view.active{display:block}
 #view-login{min-height:calc(100vh - 60px);display:none;align-items:center;justify-content:center;padding:40px 20px}
 #view-login.active{display:flex}
@@ -46,16 +45,6 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;min-
 .field input:focus,.field textarea:focus{border-color:var(--red)}
 .field textarea{resize:vertical;min-height:78px}
 .err{font-size:12px;color:var(--red2);margin-top:8px;display:none}
-.setup-banner{background:#0d1520;border:1px solid #1e3a5f;border-left:3px solid #3b82f6;border-radius:2px;padding:18px 22px;margin-bottom:24px}
-.setup-banner h3{font-size:14px;font-weight:600;color:#93c5fd;margin-bottom:8px}
-.setup-banner p{font-size:13px;color:#7aabde;line-height:1.7}
-.setup-banner code{display:inline-block;background:#0a1628;color:#60a5fa;padding:2px 7px;border-radius:2px;font-size:12px;font-family:monospace;border:1px solid #1e3a5f;word-break:break-all}
-.setup-banner a{color:#60a5fa;text-decoration:underline}
-.setup-steps{margin-top:12px;padding-left:18px}
-.setup-steps li{font-size:13px;color:#7aabde;line-height:1.9}
-.firebase-form{background:var(--bg2);border:1px solid #1e3a5f;border-top:3px solid #3b82f6;border-radius:2px;padding:24px 28px;margin-bottom:24px}
-.firebase-form h3{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:18px;color:#93c5fd}
-.fb-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 #view-admin{padding:28px;animation:fadeUp .25s ease}
 .section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
 .section-head h2{font-family:'Barlow Condensed',sans-serif;font-size:19px;font-weight:700;text-transform:uppercase;letter-spacing:.4px}
@@ -131,7 +120,6 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;min-
 .lb-prev,.lb-next{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.1);border:none;color:#fff;font-size:22px;width:44px;height:44px;border-radius:2px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s}
 .lb-prev:hover,.lb-next:hover{background:rgba(255,255,255,.22)}
 .lb-prev{left:16px}.lb-next{right:16px}
-.info-banner{background:#0f1a0f;border:1px solid #1a5c35;border-left:3px solid var(--green);border-radius:2px;padding:12px 18px;margin-bottom:20px;font-size:13px;color:#7adbaa;line-height:1.6}
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 @keyframes spin{to{transform:rotate(360deg)}}
 @media(max-width:640px){
@@ -142,7 +130,6 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;min-
   .hero h1{font-size:32px}
   .client-body{padding:16px}
   .wa-config{flex-direction:column;align-items:stretch}
-  .fb-grid{grid-template-columns:1fr}
   .add-form{padding:18px}
 }
 ::-webkit-scrollbar{width:5px}
@@ -191,34 +178,6 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;min-
 
 <!-- ADMIN -->
 <div id="view-admin" class="view">
-
-  <div class="setup-banner" id="setup-banner">
-    <h3>🔧 Configure o Firebase (apenas uma vez)</h3>
-    <p>Cole as credenciais do seu projeto Firebase abaixo para salvar os dados na nuvem.</p>
-    <ol class="setup-steps">
-      <li>Acesse <a href="https://console.firebase.google.com" target="_blank"><strong>console.firebase.google.com</strong></a> → seu projeto</li>
-      <li>Engrenagem ⚙️ → Configurações do projeto → aba Geral → "Seus apps" → clique em <strong>&lt;/&gt;</strong></li>
-      <li>Copie os valores do <code>firebaseConfig</code> e cole abaixo</li>
-    </ol>
-  </div>
-
-  <div class="firebase-form" id="firebase-form">
-    <h3>Configuração do Firebase</h3>
-    <div class="fb-grid">
-      <div class="field"><label>API Key</label><input type="text" id="fb-apiKey" placeholder="AIzaSy..."/></div>
-      <div class="field"><label>Auth Domain</label><input type="text" id="fb-authDomain" placeholder="projeto.firebaseapp.com"/></div>
-      <div class="field"><label>Project ID</label><input type="text" id="fb-projectId" placeholder="shelino-veiculos"/></div>
-      <div class="field"><label>Storage Bucket</label><input type="text" id="fb-storageBucket" placeholder="projeto.appspot.com"/></div>
-      <div class="field"><label>Messaging Sender ID</label><input type="text" id="fb-messagingSenderId" placeholder="123456789"/></div>
-      <div class="field"><label>App ID</label><input type="text" id="fb-appId" placeholder="1:123:web:abc"/></div>
-    </div>
-    <div style="display:flex;gap:10px;margin-top:16px">
-      <button class="btn btn-red" onclick="saveFirebaseConfig()">Salvar configuração</button>
-      <button class="btn btn-xs" onclick="clearFirebaseConfig()" style="color:var(--muted)">Limpar</button>
-    </div>
-    <p id="fb-status" style="font-size:12px;color:var(--muted);margin-top:10px"></p>
-  </div>
-
   <div class="section-head">
     <h2>Painel do Administrador</h2>
     <button class="btn btn-sm btn-outline-red" onclick="doLogout()">
@@ -236,10 +195,6 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;min-
     <button class="btn btn-sm" onclick="saveWa()" style="background:var(--green-dim);color:var(--green);border-color:var(--green-border);">Salvar</button>
   </div>
 
-  <div class="info-banner">
-    📸 <strong>Dica sobre fotos:</strong> Para melhor desempenho, use fotos de até <strong>1MB cada</strong>. O site redimensiona automaticamente antes de salvar.
-  </div>
-
   <div class="add-form">
     <h3>Adicionar veículo</h3>
     <div class="form-grid">
@@ -253,7 +208,7 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;min-
           <div class="photos-drop">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
             <span>Clique para selecionar fotos do seu computador</span>
-            <small>Pode selecionar várias fotos de uma vez · JPG, PNG, WEBP</small>
+            <small>Pode selecionar várias fotos · JPG, PNG, WEBP — máx. 1MB cada</small>
           </div>
           <div class="photos-previews" id="photos-previews"></div>
           <input type="file" id="f-imgs" accept="image/*" multiple style="display:none" onchange="previewPhotos(this)"/>
@@ -305,20 +260,43 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;min-
   </div>
 </div>
 
-<script type="module">
-import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, setDoc, getDoc, orderBy, query }
-  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+<script>
+// ══════════════════════════════════════
+// CONFIGURAÇÃO — Realtime Database
+// ══════════════════════════════════════
+const DB_URL = "https://shelino-s-car-default-rtdb.firebaseio.com";
+const SENHA  = "shelino2024";
+const MAX_W  = 800, MAX_H = 600, QUALITY = 0.72;
 
-const SENHA = "shelino2024";
-const MAX_W = 900, MAX_H = 700, QUALITY = 0.75;
-
-let db = null, firebaseOk = false;
 let cars = [], waNumber = "", isAdmin = false;
-let pendingPhotos = [];
-let lbPhotos = [], lbIdx = 0;
+let pendingPhotos = [], lbPhotos = [], lbIdx = 0;
 
-// Comprime imagem para base64 reduzida
+// ── REST helpers ──
+async function dbGet(path) {
+  const r = await fetch(`${DB_URL}/${path}.json`);
+  return r.ok ? r.json() : null;
+}
+async function dbSet(path, data) {
+  const r = await fetch(`${DB_URL}/${path}.json`, {
+    method: "PUT", headers: {"Content-Type":"application/json"},
+    body: JSON.stringify(data)
+  });
+  return r.ok;
+}
+async function dbPush(path, data) {
+  const r = await fetch(`${DB_URL}/${path}.json`, {
+    method: "POST", headers: {"Content-Type":"application/json"},
+    body: JSON.stringify(data)
+  });
+  if (!r.ok) throw new Error(await r.text());
+  const j = await r.json();
+  return j.name; // Firebase push key
+}
+async function dbDelete(path) {
+  await fetch(`${DB_URL}/${path}.json`, { method: "DELETE" });
+}
+
+// ── Image compress ──
 function compressImage(file) {
   return new Promise(resolve => {
     const reader = new FileReader();
@@ -326,12 +304,12 @@ function compressImage(file) {
       const img = new Image();
       img.onload = () => {
         let w = img.width, h = img.height;
-        if (w > MAX_W) { h = Math.round(h * MAX_W / w); w = MAX_W; }
-        if (h > MAX_H) { w = Math.round(w * MAX_H / h); h = MAX_H; }
-        const canvas = document.createElement('canvas');
-        canvas.width = w; canvas.height = h;
-        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-        resolve(canvas.toDataURL('image/jpeg', QUALITY));
+        if (w > MAX_W) { h = Math.round(h*MAX_W/w); w = MAX_W; }
+        if (h > MAX_H) { w = Math.round(w*MAX_H/h); h = MAX_H; }
+        const c = document.createElement("canvas");
+        c.width = w; c.height = h;
+        c.getContext("2d").drawImage(img, 0, 0, w, h);
+        resolve(c.toDataURL("image/jpeg", QUALITY));
       };
       img.src = e.target.result;
     };
@@ -339,94 +317,38 @@ function compressImage(file) {
   });
 }
 
-function initFirebase(cfg) {
-  try {
-    const existing = getApps().find(a => a.name === "shelino");
-    const app = existing ? getApp("shelino") : initializeApp(cfg, "shelino");
-    db = getFirestore(app);
-    firebaseOk = true;
-    return true;
-  } catch(e) { console.error(e); return false; }
-}
-
-function loadFirebaseConfig() {
-  const raw = localStorage.getItem("shelino_fb_config");
-  if (!raw) return false;
-  try {
-    const cfg = JSON.parse(raw);
-    if (!cfg.apiKey) return false;
-    fillFirebaseForm(cfg);
-    return initFirebase(cfg);
-  } catch { return false; }
-}
-
-function fillFirebaseForm(cfg) {
-  document.getElementById("fb-apiKey").value = cfg.apiKey||"";
-  document.getElementById("fb-authDomain").value = cfg.authDomain||"";
-  document.getElementById("fb-projectId").value = cfg.projectId||"";
-  document.getElementById("fb-storageBucket").value = cfg.storageBucket||"";
-  document.getElementById("fb-messagingSenderId").value = cfg.messagingSenderId||"";
-  document.getElementById("fb-appId").value = cfg.appId||"";
-}
-
-window.saveFirebaseConfig = async function() {
-  const cfg = {
-    apiKey: document.getElementById("fb-apiKey").value.trim(),
-    authDomain: document.getElementById("fb-authDomain").value.trim(),
-    projectId: document.getElementById("fb-projectId").value.trim(),
-    storageBucket: document.getElementById("fb-storageBucket").value.trim(),
-    messagingSenderId: document.getElementById("fb-messagingSenderId").value.trim(),
-    appId: document.getElementById("fb-appId").value.trim(),
-  };
-  if (!cfg.apiKey || !cfg.projectId) { showToast("Preencha pelo menos API Key e Project ID."); return; }
-  localStorage.setItem("shelino_fb_config", JSON.stringify(cfg));
-  if (initFirebase(cfg)) {
-    document.getElementById("fb-status").textContent = "✓ Firebase conectado!";
-    document.getElementById("setup-banner").style.display = "none";
-    document.getElementById("firebase-form").style.display = "none";
-    showToast("Firebase conectado com sucesso!", true);
-    await loadCars(); await loadWa();
-  } else {
-    document.getElementById("fb-status").textContent = "Erro ao conectar. Verifique os dados.";
-    showToast("Erro ao conectar. Verifique os dados.");
-  }
-};
-
-window.clearFirebaseConfig = function() {
-  if (!confirm("Limpar configuração?")) return;
-  localStorage.removeItem("shelino_fb_config");
-  location.reload();
-};
-
+// ── Load data ──
 async function loadCars() {
-  if (!firebaseOk) { cars = []; renderAll(); return; }
-  try {
-    const q = query(collection(db, "cars"), orderBy("createdAt","desc"));
-    const snap = await getDocs(q);
-    cars = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-  } catch(e) { console.error(e); cars = []; }
+  const data = await dbGet("cars");
+  if (!data) { cars = []; }
+  else {
+    cars = Object.entries(data)
+      .map(([id, v]) => ({ id, ...v }))
+      .sort((a, b) => (b.createdAt||0) - (a.createdAt||0));
+  }
   renderAll();
 }
 
 async function loadWa() {
-  if (!firebaseOk) return;
-  try {
-    const d = await getDoc(doc(db, "config", "whatsapp"));
-    if (d.exists()) { waNumber = d.data().number || ""; document.getElementById("wa-num").value = waNumber; }
-  } catch(e) { console.error(e); }
+  const data = await dbGet("config/whatsapp");
+  if (data && data.number) {
+    waNumber = data.number;
+    document.getElementById("wa-num").value = waNumber;
+  }
 }
 
+// ── Save WhatsApp ──
 window.saveWa = async function() {
   const raw = document.getElementById("wa-num").value.trim().replace(/\D/g,"");
   if (!raw) { showToast("Digite um número válido."); return; }
   waNumber = raw;
-  if (firebaseOk) { try { await setDoc(doc(db,"config","whatsapp"),{number:raw}); } catch(e){console.error(e);} }
+  await dbSet("config/whatsapp", { number: raw });
   showToast("WhatsApp salvo: +" + raw, true);
 };
 
+// ── Photos ──
 window.previewPhotos = async function(input) {
-  const files = Array.from(input.files);
-  for (const file of files) {
+  for (const file of Array.from(input.files)) {
     const compressed = await compressImage(file);
     pendingPhotos.push({ data: compressed });
     renderPreviews();
@@ -435,15 +357,17 @@ window.previewPhotos = async function(input) {
 };
 
 function renderPreviews() {
-  document.getElementById("photos-previews").innerHTML = pendingPhotos.map((p,i) => `
-    <div class="photo-thumb-wrap">
-      <img src="${p.data}" alt="foto"/>
-      <button class="photo-thumb-del" onclick="removePreview(${i})">✕</button>
-    </div>`).join("");
+  document.getElementById("photos-previews").innerHTML =
+    pendingPhotos.map((p,i) => `
+      <div class="photo-thumb-wrap">
+        <img src="${p.data}" alt="foto"/>
+        <button class="photo-thumb-del" onclick="removePreview(${i})">✕</button>
+      </div>`).join("");
 }
 
 window.removePreview = function(i) { pendingPhotos.splice(i,1); renderPreviews(); };
 
+// ── Mask ──
 window.maskPrice = function(el) {
   let v = el.value.replace(/\D/g,"");
   if(!v){el.value="";return;}
@@ -456,37 +380,35 @@ function fmtPrice(v) {
   return isNaN(n) ? "R$ "+v : "R$ "+n.toLocaleString("pt-BR");
 }
 
+// ── Add car ──
 window.addCar = async function() {
-  const name = document.getElementById("f-name").value.trim();
+  const name  = document.getElementById("f-name").value.trim();
   const price = document.getElementById("f-price").value.trim();
-  if (!name) { showToast("Informe o nome/modelo."); return; }
+  if (!name)  { showToast("Informe o nome/modelo."); return; }
   if (!price) { showToast("Informe o valor."); return; }
-  if (!firebaseOk) { showToast("Configure o Firebase primeiro."); return; }
 
   const btn = document.getElementById("add-btn");
   const msg = document.getElementById("saving-msg");
-  btn.disabled = true;
-  btn.textContent = "Salvando...";
-  msg.style.display = "block";
+  btn.disabled = true; btn.textContent = "Salvando..."; msg.style.display = "block";
 
   const car = {
     name, price,
     year: document.getElementById("f-year").value.trim(),
-    km: document.getElementById("f-km").value.trim(),
+    km:   document.getElementById("f-km").value.trim(),
     desc: document.getElementById("f-desc").value.trim(),
     photos: pendingPhotos.map(p => p.data),
     createdAt: Date.now(),
   };
 
   try {
-    const docRef = await addDoc(collection(db,"cars"), car);
-    car.id = docRef.id;
+    const id = await dbPush("cars", car);
+    car.id = id;
     cars.unshift(car);
     clearForm(); renderAll();
-    showToast("Veículo publicado com sucesso!", true);
+    showToast("Veículo publicado com sucesso! 🚗", true);
   } catch(e) {
     console.error(e);
-    showToast("Erro ao salvar: " + e.message);
+    showToast("Erro: " + e.message);
   }
 
   btn.disabled = false;
@@ -501,50 +423,50 @@ window.clearForm = function() {
 };
 
 window.removeCar = async function(id) {
-  if (!confirm("Remover este veículo?")) return;
-  if (firebaseOk) { try { await deleteDoc(doc(db,"cars",id)); } catch(e){console.error(e);} }
+  if (!confirm("Remover este veículo do catálogo?")) return;
+  await dbDelete("cars/" + id);
   cars = cars.filter(c => c.id !== id);
   renderAll(); showToast("Veículo removido.");
 };
 
+// ── Gallery ──
 function galleryHtml(photos, carId) {
   if (!photos || !photos.length) return `<div class="gallery"><div class="gallery-placeholder">
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.3" viewBox="0 0 24 24"><path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v3"/><rect x="9" y="11" width="14" height="10" rx="2"/><circle cx="12" cy="16" r="1"/><circle cx="20" cy="16" r="1"/></svg>
   </div></div>`;
   const slides = photos.map((url,i)=>`<div class="gallery-slide"><img src="${url}" alt="foto ${i+1}" onclick="openLightbox('${carId}',${i})" style="cursor:zoom-in"/></div>`).join("");
-  const dots = photos.length>1?`<div class="gallery-dots">${photos.map((_,i)=>`<button class="gallery-dot${i===0?' active':''}" onclick="setSlide('${carId}',${i})"></button>`).join("")}</div>`:"";
-  const arrows = photos.length>1?`<button class="gallery-btn gallery-prev" onclick="slideNav('${carId}',-1)">‹</button><button class="gallery-btn gallery-next" onclick="slideNav('${carId}',1)">›</button>`:"";
-  const counter = photos.length>1?`<div class="gallery-count">1/${photos.length}</div>`:"";
+  const dots   = photos.length>1 ? `<div class="gallery-dots">${photos.map((_,i)=>`<button class="gallery-dot${i===0?' active':''}" onclick="setSlide('${carId}',${i})"></button>`).join("")}</div>` : "";
+  const arrows = photos.length>1 ? `<button class="gallery-btn gallery-prev" onclick="slideNav('${carId}',-1)">‹</button><button class="gallery-btn gallery-next" onclick="slideNav('${carId}',1)">›</button>` : "";
+  const count  = photos.length>1 ? `<div class="gallery-count">1/${photos.length}</div>` : "";
   return `<div class="gallery" id="gal-${carId}" data-idx="0" data-total="${photos.length}">
     <div class="gallery-slides" id="slides-${carId}">${slides}</div>
-    ${arrows}${dots}${counter}
+    ${arrows}${dots}${count}
   </div>`;
 }
 
 window.slideNav = function(carId,dir){
-  const gal=document.getElementById("gal-"+carId);
-  setSlide(carId,(parseInt(gal.dataset.idx)+dir+parseInt(gal.dataset.total))%parseInt(gal.dataset.total));
+  const g=document.getElementById("gal-"+carId);
+  setSlide(carId,(parseInt(g.dataset.idx)+dir+parseInt(g.dataset.total))%parseInt(g.dataset.total));
 };
 window.setSlide = function(carId,idx){
-  const gal=document.getElementById("gal-"+carId);
-  gal.dataset.idx=idx;
+  const g=document.getElementById("gal-"+carId);
+  g.dataset.idx=idx;
   document.getElementById("slides-"+carId).style.transform=`translateX(-${idx*100}%)`;
-  gal.querySelectorAll(".gallery-dot").forEach((d,i)=>d.classList.toggle("active",i===idx));
-  const c=gal.querySelector(".gallery-count");
-  if(c) c.textContent=`${idx+1}/${gal.dataset.total}`;
+  g.querySelectorAll(".gallery-dot").forEach((d,i)=>d.classList.toggle("active",i===idx));
+  const c=g.querySelector(".gallery-count"); if(c) c.textContent=`${idx+1}/${g.dataset.total}`;
 };
 
-window.openLightbox = function(carId,startIdx){
-  const car=cars.find(c=>c.id===carId);
-  if(!car||!car.photos) return;
-  lbPhotos=car.photos; lbIdx=startIdx;
+window.openLightbox = function(carId,i){
+  const car=cars.find(c=>c.id===carId); if(!car||!car.photos) return;
+  lbPhotos=car.photos; lbIdx=i;
   document.getElementById("lb-img").src=lbPhotos[lbIdx];
   document.getElementById("lightbox").classList.add("open");
 };
-window.lbNav=function(dir){lbIdx=(lbIdx+dir+lbPhotos.length)%lbPhotos.length;document.getElementById("lb-img").src=lbPhotos[lbIdx];};
+window.lbNav=function(d){lbIdx=(lbIdx+d+lbPhotos.length)%lbPhotos.length;document.getElementById("lb-img").src=lbPhotos[lbIdx];};
 window.lbClose=function(){document.getElementById("lightbox").classList.remove("open");};
 window.closeLightbox=function(e){if(e.target.id==="lightbox")lbClose();};
 
+// ── Render ──
 function renderAll(){renderAdmin();renderClient();}
 
 function renderAdmin(){
@@ -594,6 +516,7 @@ function renderClient(){
   }).join("");
 }
 
+// ── Navigation ──
 function showView(id){document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));document.getElementById(id).classList.add("active");}
 
 window.showClient=function(){
@@ -601,8 +524,7 @@ window.showClient=function(){
   document.getElementById("badge").textContent="Catálogo";
   document.getElementById("badge").className="badge badge-client";
   document.getElementById("mode-btn").innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Área Admin`;
-  isAdmin=false;
-  if(firebaseOk)loadCars();else renderClient();
+  isAdmin=false; loadCars();
   window.scrollTo({top:0,behavior:"smooth"});
 };
 
@@ -611,11 +533,7 @@ function showAdmin(){
   document.getElementById("badge").textContent="Admin";
   document.getElementById("badge").className="badge badge-admin";
   document.getElementById("mode-btn").innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> Ver catálogo`;
-  isAdmin=true;
-  const hasCfg=!!localStorage.getItem("shelino_fb_config");
-  document.getElementById("setup-banner").style.display=hasCfg?"none":"block";
-  document.getElementById("firebase-form").style.display=hasCfg?"none":"block";
-  if(firebaseOk){loadCars();loadWa();}else renderAdmin();
+  isAdmin=true; loadCars(); loadWa();
   window.scrollTo({top:0,behavior:"smooth"});
 }
 
@@ -637,11 +555,9 @@ function showToast(msg,ok=false){
   window._tt=setTimeout(()=>t.classList.remove("show"),3500);
 }
 
-const cfgOk=loadFirebaseConfig();
-if(cfgOk){document.getElementById("setup-banner").style.display="none";document.getElementById("firebase-form").style.display="none";}
+// ── Init ──
 showClient();
-if(firebaseOk){loadCars();}
-else{document.getElementById("client-grid").innerHTML="";document.getElementById("empty-state").style.display="block";document.getElementById("admin-grid").innerHTML='<p style="color:var(--muted);font-size:13px;padding:8px 0">Configure o Firebase para carregar os dados.</p>';}
+loadCars();
 </script>
 </body>
 </html>
