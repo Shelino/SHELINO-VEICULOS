@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Shelinos Car</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080808;
+  --bg2:#111111;
+  --bg3:#1a1a1a;
+  --bg4:#222222;
+  --border:#2a2a2a;
+  --border2:#3a3a3a;
+  --text:#f0f0f0;
+  --muted:#888;
+  --muted2:#444;
+  --red:#cc1c1c;
+  --red2:#e82929;
+  --red3:#ff4444;
+  --red-dim:#1a0505;
+  --silver:#c8c8c8;
+  --silver2:#a0a0a0;
+  --green:#1ebe57;
+  --green-dim:#0a1f10;
+  --green-border:#1a5c35;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;min-height:100vh;overflow-x:hidden}
+
+/* ── TOPBAR ── */
+.topbar{
+  position:sticky;top:0;z-index:200;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 32px;height:64px;
+  background:rgba(8,8,8,0.97);
+  border-bottom:1px solid #1a1a1a;
+}
+.topbar::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--red) 0%,var(--red2) 50%,transparent 100%)}
+.logo{display:flex;align-items:center;gap:12px}
+.logo-icon{
+  width:38px;height:38px;
+  background:linear-gradient(135deg,var(--red) 0%,var(--red2) 100%);
+  border-radius:4px;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 16px rgba(200,28,28,.35);
+}
+.logo-icon svg{width:22px;height:22px;fill:#fff}
+.logo-text{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:#fff;line-height:1}
+.logo-text span{color:var(--red3)}
+.logo-sub{font-size:9px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-top:1px}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.badge{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;padding:3px 9px;border-radius:2px}
+.badge-admin{background:var(--red-dim);color:var(--red3);border:1px solid #5a1010}
+.badge-client{background:#111;color:var(--muted);border:1px solid var(--border)}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;font-family:'Barlow',sans-serif;font-size:13px;font-weight:600;border-radius:2px;cursor:pointer;border:1px solid var(--border2);background:var(--bg3);color:var(--text);transition:all .18s;text-decoration:none;white-space:nowrap;letter-spacing:.2px}
+.btn:hover{background:var(--bg4);border-color:#555}
+.btn:active{transform:scale(.98)}
+.btn-red{background:linear-gradient(135deg,var(--red) 0%,var(--red2) 100%);color:#fff;border-color:var(--red);box-shadow:0 2px 12px rgba(200,28,28,.3)}
+.btn-red:hover{background:linear-gradient(135deg,#b01818 0%,var(--red) 100%);box-shadow:0 4px 18px rgba(200,28,28,.45)}
+.btn-outline-red{background:transparent;color:var(--red3);border-color:#5a1010}
+.btn-outline-red:hover{background:var(--red-dim)}
+.btn-sm{padding:6px 12px;font-size:12px}
+
+/* ── VIEWS ── */
+.view{display:none}.view.active{display:block}
+#view-login{min-height:calc(100vh - 64px);display:none;align-items:center;justify-content:center;padding:40px 20px}
+#view-login.active{display:flex}
+.login-card{background:var(--bg2);border:1px solid var(--border);border-top:3px solid var(--red);border-radius:3px;padding:40px 36px;width:100%;max-width:360px;animation:fadeUp .3s ease}
+.login-card h2{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.login-card p{font-size:13px;color:var(--muted);margin-bottom:28px}
+
+/* ── FIELDS ── */
+.field{margin-bottom:14px}
+.field label{display:block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:6px}
+.field input,.field textarea{width:100%;padding:9px 13px;font-family:'Barlow',sans-serif;font-size:14px;background:var(--bg3);color:var(--text);border:1px solid var(--border2);border-radius:2px;outline:none;transition:border-color .18s}
+.field input:focus,.field textarea:focus{border-color:var(--red)}
+.field textarea{resize:vertical;min-height:78px}
+.err{font-size:12px;color:var(--red3);margin-top:8px;display:none}
+
+/* ── HERO ── */
+.hero{
+  background:var(--bg2);
+  border-bottom:1px solid var(--border);
+  padding:0;
+  position:relative;overflow:hidden;
+  min-height:300px;
+  display:flex;align-items:center;
+}
+.hero-bg{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 60% 80% at 100% 50%, rgba(200,28,28,.12) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 60% at 0% 50%, rgba(200,28,28,.06) 0%, transparent 60%),
+    repeating-linear-gradient(90deg,transparent,transparent 80px,rgba(255,255,255,.012) 80px,rgba(255,255,255,.012) 81px),
+    repeating-linear-gradient(0deg,transparent,transparent 80px,rgba(255,255,255,.008) 80px,rgba(255,255,255,.008) 81px);
+}
+.hero-topline{position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--red) 0%,var(--red2) 40%,transparent 100%)}
+.hero-content{position:relative;padding:52px 32px 48px;max-width:600px}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2px;
+  color:var(--red3);margin-bottom:18px;
+}
+.hero-badge::before{content:'';display:block;width:24px;height:2px;background:var(--red)}
+.hero-badge::after{content:'';display:block;width:24px;height:2px;background:var(--red)}
+.hero h1{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:52px;font-weight:900;text-transform:uppercase;
+  letter-spacing:1px;line-height:1.0;margin-bottom:16px;
+  text-shadow:0 2px 20px rgba(0,0,0,.5);
+}
+.hero h1 .brand{color:var(--silver)}
+.hero h1 .accent{color:var(--red3)}
+.hero-tagline{
+  font-size:13px;font-weight:600;text-transform:uppercase;
+  letter-spacing:3px;color:var(--muted);margin-bottom:16px;
+  display:flex;align-items:center;gap:10px;
+}
+.hero-tagline span{color:var(--red2)}
+.hero-desc{font-size:14px;color:var(--silver2);line-height:1.8;max-width:440px}
+.hero-pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
+.hero-pill{
+  font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;
+  padding:5px 12px;border-radius:2px;
+  background:rgba(200,28,28,.12);color:var(--red3);
+  border:1px solid rgba(200,28,28,.25);
+}
+.hero-right{
+  position:absolute;right:0;top:0;bottom:0;width:45%;
+  display:flex;align-items:center;justify-content:center;
+  pointer-events:none;
+}
+.hero-car-silhouette{
+  width:100%;height:100%;
+  background:linear-gradient(135deg,rgba(200,28,28,.06) 0%,transparent 60%);
+  display:flex;align-items:center;justify-content:center;
+}
+.hero-car-silhouette svg{width:320px;height:auto;opacity:.07}
+
+/* ── ADMIN ── */
+#view-admin{padding:28px;animation:fadeUp .25s ease}
+.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.section-head h2{font-family:'Barlow Condensed',sans-serif;font-size:19px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;display:flex;align-items:center;gap:8px}
+.section-head h2::before{content:'';display:block;width:3px;height:18px;background:var(--red);border-radius:1px}
+
+.wa-config{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--green);border-radius:2px;padding:16px 22px;display:flex;align-items:center;gap:14px;margin-bottom:24px}
+.wa-config-inner{flex:1}
+.wa-config-inner label{display:block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:6px}
+.wa-config-inner input{width:100%;padding:8px 12px;font-family:'Barlow',sans-serif;font-size:14px;background:var(--bg3);color:var(--text);border:1px solid var(--border2);border-radius:2px;outline:none;transition:border-color .18s}
+.wa-config-inner input:focus{border-color:var(--green)}
+
+.add-form{background:var(--bg2);border:1px solid var(--border);border-radius:3px;padding:24px 28px;margin-bottom:28px;position:relative;overflow:hidden}
+.add-form::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--red) 0%,var(--red2) 50%,transparent 100%)}
+.add-form h3{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-bottom:20px;display:flex;align-items:center;gap:8px;color:var(--silver)}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-full{grid-column:1/-1}
+.form-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:16px}
+
+.photos-zone{border:1.5px dashed var(--border2);border-radius:2px;background:var(--bg3);padding:20px;cursor:pointer;transition:border-color .18s}
+.photos-zone:hover{border-color:var(--red)}
+.photos-drop{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:16px 0;color:var(--muted);font-size:13px;text-align:center}
+.photos-drop svg{width:30px;height:30px;stroke:var(--muted2)}
+.photos-drop small{font-size:11px;color:var(--muted2)}
+.photos-previews{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.photo-thumb-wrap{position:relative;width:90px;height:70px;border-radius:2px;overflow:hidden;border:1px solid var(--border)}
+.photo-thumb-wrap img{width:100%;height:100%;object-fit:cover;display:block}
+.photo-thumb-del{position:absolute;top:3px;right:3px;background:rgba(0,0,0,.75);color:#fff;border:none;border-radius:2px;cursor:pointer;font-size:11px;width:18px;height:18px;display:flex;align-items:center;justify-content:center}
+.photo-thumb-del:hover{background:var(--red)}
+.count-pill{font-size:11px;background:var(--bg3);color:var(--muted);border:1px solid var(--border);border-radius:20px;padding:2px 9px}
+
+/* ── CARS GRID ── */
+.cars-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px}
+.car-card{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:3px;overflow:hidden;
+  transition:border-color .2s,transform .2s,box-shadow .2s;
+  animation:fadeUp .3s ease both;
+}
+.car-card:hover{border-color:#3a3a3a;transform:translateY(-3px);box-shadow:0 8px 32px rgba(0,0,0,.4)}
+
+/* Gallery */
+.gallery{position:relative;width:100%;height:210px;overflow:hidden;background:var(--bg3)}
+.gallery-slides{display:flex;height:100%;transition:transform .3s ease}
+.gallery-slide{min-width:100%;height:100%}
+.gallery-slide img{width:100%;height:100%;object-fit:cover;display:block}
+.gallery-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px}
+.gallery-placeholder svg{width:38px;height:38px;stroke:var(--muted2)}
+.gallery-placeholder span{font-size:11px;color:var(--muted2);text-transform:uppercase;letter-spacing:1px}
+.gallery-btn{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.65);color:#fff;border:none;width:32px;height:32px;border-radius:2px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;font-size:18px}
+.gallery-btn:hover{background:rgba(200,28,28,.8)}
+.gallery-prev{left:8px}.gallery-next{right:8px}
+.gallery-dots{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:5px}
+.gallery-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.3);border:none;cursor:pointer;padding:0;transition:background .15s}
+.gallery-dot.active{background:var(--red3)}
+.gallery-count{position:absolute;top:8px;right:8px;background:rgba(0,0,0,.7);color:#fff;font-size:11px;font-weight:600;padding:2px 8px;border-radius:2px;letter-spacing:.3px}
+.gallery-tag{position:absolute;top:8px;left:8px;background:linear-gradient(135deg,var(--red),var(--red2));color:#fff;font-size:10px;font-weight:700;padding:3px 9px;border-radius:2px;text-transform:uppercase;letter-spacing:.5px}
+
+.car-body{padding:16px 18px}
+.car-name{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;text-transform:uppercase;letter-spacing:.3px;margin-bottom:3px;color:#fff}
+.car-meta{font-size:12px;color:var(--muted);margin-bottom:10px;font-weight:500;display:flex;gap:8px;align-items:center}
+.car-meta-dot{width:3px;height:3px;border-radius:50%;background:var(--muted2)}
+.car-desc{font-size:13px;color:var(--muted);line-height:1.65;margin-bottom:12px}
+.car-price{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:28px;font-weight:900;
+  color:var(--red3);letter-spacing:.2px;
+  margin-bottom:14px;
+  text-shadow:0 0 20px rgba(232,41,41,.3);
+}
+.car-divider{height:1px;background:var(--border);margin-bottom:14px}
+.car-actions{display:flex;gap:8px}
+
+/* WA btn */
+.wa-btn{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  width:100%;padding:11px 0;font-family:'Barlow',sans-serif;
+  font-size:13px;font-weight:700;letter-spacing:.3px;
+  border-radius:2px;cursor:pointer;text-decoration:none;
+  background:linear-gradient(135deg,#0a2010,#0d2a15);
+  color:var(--green);border:1px solid var(--green-border);
+  transition:all .18s;text-transform:uppercase;
+}
+.wa-btn:hover{background:linear-gradient(135deg,#0d2a15,#122918);box-shadow:0 2px 12px rgba(30,190,87,.2)}
+
+/* ── CLIENT BODY ── */
+.client-body{padding:28px}
+.section-label{
+  font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;
+  text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);
+  margin-bottom:20px;display:flex;align-items:center;gap:12px;
+}
+.section-label::before{content:'';display:block;width:3px;height:14px;background:var(--red);border-radius:1px}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border)}
+
+.empty-state{text-align:center;padding:64px 20px}
+.empty-state svg{width:48px;height:48px;stroke:var(--muted2);margin-bottom:16px}
+.empty-state p{font-size:14px;color:var(--muted);line-height:1.8}
+
+/* Loader */
+.loader{text-align:center;padding:48px;color:var(--muted);font-size:14px}
+.spinner{width:28px;height:28px;border:2px solid var(--border2);border-top-color:var(--red);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 14px}
+
+/* Toast */
+.toast{position:fixed;bottom:24px;right:24px;z-index:999;background:var(--bg3);border:1px solid var(--border2);border-left:3px solid var(--red);color:var(--text);font-size:13px;padding:12px 18px;border-radius:2px;display:none;max-width:320px;box-shadow:0 4px 20px rgba(0,0,0,.4)}
+.toast.green{border-left-color:var(--green)}.toast.show{display:block}
+
+/* Lightbox */
+.lightbox{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.95);align-items:center;justify-content:center}
+.lightbox.open{display:flex}
+.lb-img{max-width:90vw;max-height:88vh;object-fit:contain;border-radius:2px;box-shadow:0 0 60px rgba(0,0,0,.8)}
+.lb-close{position:absolute;top:16px;right:20px;background:rgba(255,255,255,.1);border:none;color:#fff;font-size:22px;cursor:pointer;line-height:1;width:38px;height:38px;border-radius:2px;display:flex;align-items:center;justify-content:center}
+.lb-close:hover{background:var(--red)}
+.lb-prev,.lb-next{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.08);border:none;color:#fff;font-size:24px;width:48px;height:48px;border-radius:2px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s}
+.lb-prev:hover,.lb-next:hover{background:rgba(200,28,28,.7)}
+.lb-prev{left:16px}.lb-next{right:16px}
+
+/* Footer */
+.footer{background:var(--bg2);border-top:1px solid var(--border);padding:20px 32px;text-align:center;font-size:12px;color:var(--muted);letter-spacing:.3px}
+.footer strong{color:var(--red3)}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+@media(max-width:640px){
+  .topbar{padding:0 16px;height:56px}
+  .hero h1{font-size:36px}
+  .hero-content{padding:36px 16px 32px}
+  .hero-right{display:none}
+  #view-admin{padding:16px}
+  .form-grid{grid-template-columns:1fr}
+  .client-body{padding:16px}
+  .wa-config{flex-direction:column;align-items:stretch}
+  .add-form{padding:18px}
+  .cars-grid{grid-template-columns:1fr}
+}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:#333;border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--red)}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="logo">
+    <div class="logo-icon">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13 8 13.67 8 14.5 7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/></svg>
+    </div>
+    <div>
+      <div class="logo-text">Shelinos <span>Car</span></div>
+      <div class="logo-sub">Compra · Venda · Troca · Financia</div>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <span id="badge" class="badge badge-client">Catálogo</span>
+    <button class="btn btn-sm" id="mode-btn" onclick="toggleMode()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      Área Admin
+    </button>
+  </div>
+</header>
+
+<div class="toast" id="toast"></div>
+
+<div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+  <button class="lb-close" onclick="lbClose()">✕</button>
+  <button class="lb-prev" onclick="lbNav(-1)">‹</button>
+  <img class="lb-img" id="lb-img" src="" alt="foto"/>
+  <button class="lb-next" onclick="lbNav(1)">›</button>
+</div>
+
+<!-- LOGIN -->
+<div id="view-login" class="view">
+  <div class="login-card">
+    <h2>Acesso Restrito</h2>
+    <p>Área exclusiva do administrador da Shelinos Car.</p>
+    <div class="field">
+      <label>Senha</label>
+      <input type="password" id="pwd" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"/>
+    </div>
+    <p class="err" id="err">Senha incorreta. Tente novamente.</p>
+    <div style="display:flex;gap:10px;margin-top:18px">
+      <button class="btn" style="flex:1" onclick="showClient()">Cancelar</button>
+      <button class="btn btn-red" style="flex:1" onclick="doLogin()">Entrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div id="view-admin" class="view">
+  <div class="section-head">
+    <h2>Painel do Administrador</h2>
+    <button class="btn btn-sm btn-outline-red" onclick="doLogout()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      Sair
+    </button>
+  </div>
+
+  <div class="wa-config">
+    <div style="font-size:26px">💬</div>
+    <div class="wa-config-inner">
+      <label>Número do WhatsApp (código do país + DDD + número, só números)</label>
+      <input type="text" id="wa-num" placeholder="Ex: 5585999998888"/>
+    </div>
+    <button class="btn btn-sm" onclick="saveWa()" style="background:var(--green-dim);color:var(--green);border-color:var(--green-border);">Salvar</button>
+  </div>
+
+  <div class="add-form">
+    <h3>
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="var(--red3)" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Adicionar veículo ao estoque
+    </h3>
+    <div class="form-grid">
+      <div class="field"><label>Nome / Modelo</label><input type="text" id="f-name" placeholder="Ex: Honda Civic EX"/></div>
+      <div class="field"><label>Ano</label><input type="text" id="f-year" placeholder="Ex: 2022/2023"/></div>
+      <div class="field"><label>Valor (R$)</label><input type="text" id="f-price" placeholder="Ex: 95.000" oninput="maskPrice(this)"/></div>
+      <div class="field"><label>Quilometragem</label><input type="text" id="f-km" placeholder="Ex: 42.000 km"/></div>
+      <div class="field form-full">
+        <label>Fotos do veículo (pode selecionar várias de uma vez)</label>
+        <div class="photos-zone" onclick="document.getElementById('f-imgs').click()">
+          <div class="photos-drop">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            <span>Clique para selecionar fotos do seu computador</span>
+            <small>Várias fotos de uma vez · JPG, PNG, WEBP</small>
+          </div>
+          <div class="photos-previews" id="photos-previews"></div>
+          <input type="file" id="f-imgs" accept="image/*" multiple style="display:none" onchange="previewPhotos(this)"/>
+        </div>
+      </div>
+      <div class="field form-full"><label>Descrição / Observações</label><textarea id="f-desc" placeholder="Ex: Único dono, revisado em concessionária, IPVA pago, sem multas..."></textarea></div>
+    </div>
+    <div class="form-actions">
+      <button class="btn" onclick="clearForm()">Limpar</button>
+      <button class="btn btn-red" id="add-btn" onclick="addCar()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Publicar no estoque
+      </button>
+    </div>
+    <p id="saving-msg" style="text-align:right;font-size:12px;color:var(--muted);margin-top:8px;display:none">⏳ Salvando na nuvem...</p>
+  </div>
+
+  <div class="section-head">
+    <h2>Estoque publicado <span class="count-pill" id="admin-count">0</span></h2>
+    <button class="btn btn-sm" onclick="showClient()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+      Ver catálogo
+    </button>
+  </div>
+  <div id="admin-grid" class="cars-grid">
+    <div class="loader"><div class="spinner"></div>Carregando estoque...</div>
+  </div>
+</div>
+
+<!-- CLIENT -->
+<div id="view-client" class="view">
+  <div class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-topline"></div>
+    <div class="hero-content">
+      <div class="hero-badge">Estoque Selecionado</div>
+      <h1>
+        <span class="brand">Shelinos</span><br>
+        <span class="accent">Car</span>
+      </h1>
+      <div class="hero-tagline">
+        <span>Compra</span> · <span>Venda</span> · <span>Troca</span> · <span>Financia</span>
+      </div>
+      <p class="hero-desc">Bons negócios te levam mais longe! Veículos selecionados com qualidade e confiança. Encontre o seu e fale com a gente pelo WhatsApp.</p>
+      <div class="hero-pills">
+        <span class="hero-pill">✔ Veículos Selecionados</span>
+        <span class="hero-pill">✔ Qualidade e Confiança</span>
+        <span class="hero-pill">✔ Realize Seu Sonho</span>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-car-silhouette">
+        <svg viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg" fill="white"><path d="M180 50H20L35 25h130l15 25zM50 50c0 8-6 15-14 15s-14-7-14-15h28zM178 50c0 8-6 15-14 15s-14-7-14-15h28z"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="client-body">
+    <div class="section-label">Veículos disponíveis</div>
+    <div id="client-grid" class="cars-grid">
+      <div class="loader"><div class="spinner"></div>Carregando estoque...</div>
+    </div>
+    <div class="empty-state" id="empty-state" style="display:none">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.3" viewBox="0 0 24 24"><path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v3"/><rect x="9" y="11" width="14" height="10" rx="2"/><circle cx="12" cy="16" r="1"/><circle cx="20" cy="16" r="1"/></svg>
+      <p>Nenhum veículo disponível no momento.<br>Volte em breve — novos carros chegando!</p>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <strong>Shelinos Car</strong> · Compra · Venda · Troca · Financia · Aqui seu novo carro te espera!
+  </footer>
+</div>
+
+<script>
+const DB_URL = "https://shelino-s-car-default-rtdb.firebaseio.com";
+const SENHA  = "shelino2024";
+const MAX_W  = 800, MAX_H = 600, QUALITY = 0.72;
+
+let cars = [], waNumber = "", isAdmin = false;
+let pendingPhotos = [], lbPhotos = [], lbIdx = 0;
+
+async function dbGet(path){const r=await fetch(`${DB_URL}/${path}.json`);return r.ok?r.json():null;}
+async function dbSet(path,data){const r=await fetch(`${DB_URL}/${path}.json`,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});return r.ok;}
+async function dbPush(path,data){const r=await fetch(`${DB_URL}/${path}.json`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});if(!r.ok)throw new Error(await r.text());return(await r.json()).name;}
+async function dbDelete(path){await fetch(`${DB_URL}/${path}.json`,{method:"DELETE"});}
+
+function compressImage(file){
+  return new Promise(resolve=>{
+    const reader=new FileReader();
+    reader.onload=e=>{
+      const img=new Image();
+      img.onload=()=>{
+        let w=img.width,h=img.height;
+        if(w>MAX_W){h=Math.round(h*MAX_W/w);w=MAX_W;}
+        if(h>MAX_H){w=Math.round(w*MAX_H/h);h=MAX_H;}
+        const c=document.createElement("canvas");
+        c.width=w;c.height=h;
+        c.getContext("2d").drawImage(img,0,0,w,h);
+        resolve(c.toDataURL("image/jpeg",QUALITY));
+      };
+      img.src=e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+async function loadCars(){
+  const data=await dbGet("cars");
+  if(!data){cars=[];}
+  else{cars=Object.entries(data).map(([id,v])=>({id,...v})).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));}
+  renderAll();
+}
+
+async function loadWa(){
+  const data=await dbGet("config/whatsapp");
+  if(data&&data.number){waNumber=data.number;document.getElementById("wa-num").value=waNumber;}
+}
+
+window.saveWa=async function(){
+  const raw=document.getElementById("wa-num").value.trim().replace(/\D/g,"");
+  if(!raw){showToast("Digite um número válido.");return;}
+  waNumber=raw;
+  await dbSet("config/whatsapp",{number:raw});
+  showToast("WhatsApp salvo: +"+raw,true);
+};
+
+window.previewPhotos=async function(input){
+  for(const file of Array.from(input.files)){
+    const compressed=await compressImage(file);
+    pendingPhotos.push({data:compressed});
+    renderPreviews();
+  }
+  input.value="";
+};
+
+function renderPreviews(){
+  document.getElementById("photos-previews").innerHTML=
+    pendingPhotos.map((p,i)=>`
+      <div class="photo-thumb-wrap">
+        <img src="${p.data}" alt="foto"/>
+        <button class="photo-thumb-del" onclick="removePreview(${i})">✕</button>
+      </div>`).join("");
+}
+
+window.removePreview=function(i){pendingPhotos.splice(i,1);renderPreviews();};
+
+window.maskPrice=function(el){
+  let v=el.value.replace(/\D/g,"");
+  if(!v){el.value="";return;}
+  el.value=parseInt(v,10).toLocaleString("pt-BR");
+};
+
+function fmtPrice(v){
+  if(!v)return"";
+  const n=parseFloat(v.replace(/\./g,"").replace(",","."));
+  return isNaN(n)?"R$ "+v:"R$ "+n.toLocaleString("pt-BR");
+}
+
+window.addCar=async function(){
+  const name=document.getElementById("f-name").value.trim();
+  const price=document.getElementById("f-price").value.trim();
+  if(!name){showToast("Informe o nome/modelo.");return;}
+  if(!price){showToast("Informe o valor.");return;}
+  const btn=document.getElementById("add-btn");
+  const msg=document.getElementById("saving-msg");
+  btn.disabled=true;btn.textContent="Salvando...";msg.style.display="block";
+  const car={name,price,year:document.getElementById("f-year").value.trim(),km:document.getElementById("f-km").value.trim(),desc:document.getElementById("f-desc").value.trim(),photos:pendingPhotos.map(p=>p.data),createdAt:Date.now()};
+  try{
+    const id=await dbPush("cars",car);
+    car.id=id;cars.unshift(car);
+    clearForm();renderAll();
+    showToast("Veículo publicado no estoque! 🚗",true);
+  }catch(e){console.error(e);showToast("Erro: "+e.message);}
+  btn.disabled=false;
+  btn.innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Publicar no estoque`;
+  msg.style.display="none";
+};
+
+window.clearForm=function(){
+  ["f-name","f-year","f-price","f-km","f-desc"].forEach(id=>document.getElementById(id).value="");
+  pendingPhotos=[];document.getElementById("photos-previews").innerHTML="";
+};
+
+window.removeCar=async function(id){
+  if(!confirm("Remover este veículo do estoque?"))return;
+  await dbDelete("cars/"+id);
+  cars=cars.filter(c=>c.id!==id);
+  renderAll();showToast("Veículo removido do estoque.");
+};
+
+function galleryHtml(photos,carId){
+  if(!photos||!photos.length)return`<div class="gallery"><div class="gallery-placeholder">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.3" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+    <span>Sem foto</span>
+  </div></div>`;
+  const slides=photos.map((url,i)=>`<div class="gallery-slide"><img src="${url}" alt="foto ${i+1}" onclick="openLightbox('${carId}',${i})" style="cursor:zoom-in"/></div>`).join("");
+  const dots=photos.length>1?`<div class="gallery-dots">${photos.map((_,i)=>`<button class="gallery-dot${i===0?' active':''}" onclick="setSlide('${carId}',${i})"></button>`).join("")}</div>`:"";
+  const arrows=photos.length>1?`<button class="gallery-btn gallery-prev" onclick="slideNav('${carId}',-1)">‹</button><button class="gallery-btn gallery-next" onclick="slideNav('${carId}',1)">›</button>`:"";
+  const count=photos.length>1?`<div class="gallery-count">${1}/${photos.length}</div>`:"";
+  const tag=`<div class="gallery-tag">Shelinos Car</div>`;
+  return`<div class="gallery" id="gal-${carId}" data-idx="0" data-total="${photos.length}">
+    <div class="gallery-slides" id="slides-${carId}">${slides}</div>
+    ${arrows}${dots}${count}${tag}
+  </div>`;
+}
+
+window.slideNav=function(carId,dir){
+  const g=document.getElementById("gal-"+carId);
+  setSlide(carId,(parseInt(g.dataset.idx)+dir+parseInt(g.dataset.total))%parseInt(g.dataset.total));
+};
+window.setSlide=function(carId,idx){
+  const g=document.getElementById("gal-"+carId);
+  g.dataset.idx=idx;
+  document.getElementById("slides-"+carId).style.transform=`translateX(-${idx*100}%)`;
+  g.querySelectorAll(".gallery-dot").forEach((d,i)=>d.classList.toggle("active",i===idx));
+  const c=g.querySelector(".gallery-count");if(c)c.textContent=`${idx+1}/${g.dataset.total}`;
+};
+
+window.openLightbox=function(carId,i){
+  const car=cars.find(c=>c.id===carId);if(!car||!car.photos)return;
+  lbPhotos=car.photos;lbIdx=i;
+  document.getElementById("lb-img").src=lbPhotos[lbIdx];
+  document.getElementById("lightbox").classList.add("open");
+};
+window.lbNav=function(d){lbIdx=(lbIdx+d+lbPhotos.length)%lbPhotos.length;document.getElementById("lb-img").src=lbPhotos[lbIdx];};
+window.lbClose=function(){document.getElementById("lightbox").classList.remove("open");};
+window.closeLightbox=function(e){if(e.target.id==="lightbox")lbClose();};
+
+function renderAll(){renderAdmin();renderClient();}
+
+function renderAdmin(){
+  document.getElementById("admin-count").textContent=cars.length;
+  const grid=document.getElementById("admin-grid");
+  if(!cars.length){grid.innerHTML='<p style="color:var(--muted);font-size:13px;padding:8px 0">Nenhum veículo no estoque ainda.</p>';return;}
+  grid.innerHTML=cars.map((c,i)=>`
+    <div class="car-card" style="animation-delay:${i*.05}s">
+      ${galleryHtml(c.photos,c.id)}
+      <div class="car-body">
+        <div class="car-name">${c.name}</div>
+        <div class="car-meta">${[c.year,c.km].filter(Boolean).map((t,i,a)=>i<a.length-1?t+`<span class="car-meta-dot"></span>`:t).join("")}</div>
+        ${c.desc?`<div class="car-desc">${c.desc}</div>`:""}
+        <div class="car-divider"></div>
+        <div class="car-price">${fmtPrice(c.price)}</div>
+        <div class="car-actions">
+          <button class="btn btn-sm btn-outline-red" onclick="removeCar('${c.id}')">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+            Remover
+          </button>
+        </div>
+      </div>
+    </div>`).join("");
+}
+
+function renderClient(){
+  const grid=document.getElementById("client-grid");
+  const empty=document.getElementById("empty-state");
+  if(!cars.length){grid.innerHTML="";empty.style.display="block";return;}
+  empty.style.display="none";
+  const wa=waNumber||"5500000000000";
+  grid.innerHTML=cars.map((c,i)=>{
+    const msg=encodeURIComponent(`Olá, Shelinos Car! Vi o catálogo e tenho interesse no ${c.name}${c.year?" "+c.year:""}${c.price?" – "+fmtPrice(c.price):""}. Ainda está disponível?`);
+    return`
+    <div class="car-card" style="animation-delay:${i*.06}s">
+      ${galleryHtml(c.photos,c.id)}
+      <div class="car-body">
+        <div class="car-name">${c.name}</div>
+        <div class="car-meta">${[c.year,c.km].filter(Boolean).join(" · ")}</div>
+        ${c.desc?`<div class="car-desc">${c.desc}</div>`:""}
+        <div class="car-divider"></div>
+        <div class="car-price">${fmtPrice(c.price)}</div>
+        <a class="wa-btn" href="https://wa.me/${wa}?text=${msg}" target="_blank" rel="noopener">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+          Tenho interesse — WhatsApp
+        </a>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function showView(id){document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));document.getElementById(id).classList.add("active");}
+
+window.showClient=function(){
+  showView("view-client");
+  document.getElementById("badge").textContent="Catálogo";
+  document.getElementById("badge").className="badge badge-client";
+  document.getElementById("mode-btn").innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Área Admin`;
+  isAdmin=false;loadCars();
+  window.scrollTo({top:0,behavior:"smooth"});
+};
+
+function showAdmin(){
+  showView("view-admin");
+  document.getElementById("badge").textContent="Admin";
+  document.getElementById("badge").className="badge badge-admin";
+  document.getElementById("mode-btn").innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> Ver catálogo`;
+  isAdmin=true;loadCars();loadWa();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+window.toggleMode=function(){
+  if(isAdmin){showClient();}
+  else{showView("view-login");document.getElementById("pwd").value="";document.getElementById("err").style.display="none";setTimeout(()=>document.getElementById("pwd").focus(),80);}
+};
+window.doLogin=function(){
+  if(document.getElementById("pwd").value===SENHA){showAdmin();}
+  else{document.getElementById("err").style.display="block";document.getElementById("pwd").value="";document.getElementById("pwd").focus();}
+};
+window.doLogout=function(){showClient();};
+
+function showToast(msg,ok=false){
+  const t=document.getElementById("toast");
+  t.textContent=(ok?"✓ ":"⚠ ")+msg;
+  t.className="toast show"+(ok?" green":"");
+  clearTimeout(window._tt);
+  window._tt=setTimeout(()=>t.classList.remove("show"),3500);
+}
+
+showClient();
+loadCars();
+</script>
+</body>
+</html>
